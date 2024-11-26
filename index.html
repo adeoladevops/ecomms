@@ -8,34 +8,35 @@
   <header>
     <nav>
       <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#products">Products</a></li>
-        <li><a href="#cart">Cart</a></li>
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
+    <div class="account">
+      <a href="#" onclick="showAccountOptions()">Account</a>
+      <div id="account-options" class="account-options">
+        <p><a href="#" onclick="setUser('User1032')">User1032</a></p>
+        <p><a href="#" onclick="showAdminLogin()">Admin</a></p>
+      </div>
+    </div>
   </header>
   <main>
     <section id="home">
       <h1>Welcome to Our E-commerce Web App</h1>
       <p>Explore our range of smartwatches and find the perfect one for you!</p>
-    </section>
-    <section id="products">
-      <h2>Product Catalog</h2>
-      <div id="product-list"></div>
-      <form id="add-product-form">
-        <h3>Add New Product</h3>
-        <label for="product-name">Product Name:</label>
-        <input type="text" id="product-name" name="product-name"><br><br>
-        <label for="product-price">Product Price:</label>
-        <input type="number" id="product-price" name="product-price"><br><br>
-        <button type="submit">Add to Cart</button>
-      </form>
-    </section>
-    <section id="cart">
-      <h2>Shopping Cart</h2>
-      <div id="shopping-cart"></div>
+      <img src="ecomms1.png" alt="finger touching ecommerce hologram">
+      <img src="ecomms2.png" alt="finger touching laptop and carts hologram in air">
+      <h2>Latest Trends on Smartphones</h2>
+      <p>Stay updated with the latest trends in smartphones...</p>
+      <img src="ecomms3.png" alt="hand hold Smartphones with hologram apps">
+      <img src="ecomms4.png" alt="hand hold Smartphones with hologram apps">
+      <h2>Technology Advances</h2>
+      <p>Discover the latest advances in technology...</p>
+      <img src="ecomms5.png" alt="Technology: AI and human Hand reaching for Technology Hologram">
+      <img src="ecomms6.png" alt="Hand touching car dashboard with hologram">
     </section>
   </main>
   <footer>

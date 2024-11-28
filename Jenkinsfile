@@ -41,7 +41,12 @@ pipeline {
                 echo 'Packaging files for deployment...'
                 sh '''
                     mkdir -p package
-                    cp -R build/ package/
+                    if [ -d build ]; then
+                        cp -R build/ package/
+                    else
+                        echo "No build directory; copying app files"
+                        cp -R *.js *.json public/ views/ package/
+                    fi
                 '''
             }
         }

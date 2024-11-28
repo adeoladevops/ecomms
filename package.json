@@ -6,7 +6,7 @@
     "scripts": {
       "start": "node server.js",
       "dev": "nodemon server.js",
-      "build": "webpack --mode production",
+      "build": "echo 'Building application...' && mkdir -p build && cp -R public/* build/",
       "test": "jest"
     },
     "keywords": ["e-commerce", "nodejs", "express", "web-app"],

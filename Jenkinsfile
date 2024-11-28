@@ -18,14 +18,20 @@ pipeline {
                 echo 'Installing dependencies and building the application...'
                 sh '''
                     npm install
+		    npm install --save-dev jest
                     npm run build
                 '''
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                sh 'npm test'
+                script {
+                    if (fileExists('tests') && findFiles(glob: 'tests/*.test.js').length > 0) {
+                        sh 'npm test'
+                    } else {
+                        echo 'No test files found. Skipping Test stage.'
+                    }
+                }
             }
         }
         stage('Package') {

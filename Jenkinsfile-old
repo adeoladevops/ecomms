@@ -13,29 +13,12 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/adeoladevops/ecomms.git'
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing the latest dependencies...'
-                sh '''
-                    npm install
-                    npm outdated || true
-                '''
-            }
-        }
-        stage('Update Dependencies') {
-            steps {
-                echo 'Updating dependencies to their latest versions...'
-                sh '''
-                    npm install -g npm-check-updates
-                    ncu -u
-                    npm install
-                '''
-            }
-        }
         stage('Build') {
             steps {
-                echo 'Building the application...'
+                echo 'Installing dependencies and building the application...'
                 sh '''
+                    npm install
+		    npm install --save-dev jest
                     npm run build
                 '''
             }
@@ -44,7 +27,6 @@ pipeline {
             steps {
                 script {
                     if (fileExists('tests') && findFiles(glob: 'tests/*.test.js').length > 0) {
-                        echo 'Running tests...'
                         sh 'npm test'
                     } else {
                         echo 'No test files found. Skipping Test stage.'

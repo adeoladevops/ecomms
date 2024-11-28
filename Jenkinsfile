@@ -81,13 +81,16 @@ pipeline {
                                 proxy_cache_bypass \$http_upgrade;
                             }
                         }
-                        " | tee $NGINX_CONF > /dev/null
+                        " sudo tee $NGINX_CONF"
+
+                        # Enable the nginx configuration
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/ecomms"
 
                         # Test nginx configuration
-                         nginx -t
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo nginx -t"
 
                         # Reload nginx to apply changes
-                            systemctl reload nginx
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl reload nginx"
                     '''
                 }
             }

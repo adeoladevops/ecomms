@@ -55,7 +55,7 @@ pipeline {
                 echo 'Deploying application to EC2 instance...'
                 sshagent(['e41a1d7c-d06c-4740-aa10-2b73944215ee']) {
                     sh '''
-                        ssh $DEPLOY_USER@$DEPLOY_HOST "mkdir -p ${REPO_DIR}"
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo mkdir -p ${REPO_DIR}"
                         rsync -avz package/ $DEPLOY_USER@$DEPLOY_HOST:${REPO_DIR}
                     '''
                 }

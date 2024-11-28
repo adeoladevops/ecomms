@@ -81,13 +81,13 @@ pipeline {
                                 proxy_cache_bypass \$http_upgrade;
                             }
                         }
-                        " | sudo tee $NGINX_CONF > /dev/null
+                        " | tee $NGINX_CONF > /dev/null
 
                         # Test nginx configuration
-                        sudo nginx -t
+                         nginx -t
 
                         # Reload nginx to apply changes
-                        sudo systemctl reload nginx
+                            systemctl reload nginx
                     '''
                 }
             }

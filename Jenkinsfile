@@ -67,7 +67,7 @@ pipeline {
                 sshagent(['e41a1d7c-d06c-4740-aa10-2b73944215ee']) {
                     sh '''
                         # Create nginx configuration file
-                        echo "
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "echo \"
                         server {
                             listen 80;
                             server_name $DEPLOY_HOST;
@@ -76,12 +76,12 @@ pipeline {
                                 proxy_pass http://127.0.0.1:3000;
                                 proxy_http_version 1.1;
                                 proxy_set_header Upgrade \$http_upgrade;
-                                proxy_set_header Connection 'upgrade';
+                                proxy_set_header Connection upgrade;
                                 proxy_set_header Host \$host;
                                 proxy_cache_bypass \$http_upgrade;
                             }
                         }
-                        " sudo tee $NGINX_CONF"
+                        \" | sudo tee $NGINX_CONF"
 
                         # Enable the nginx configuration
                         ssh $DEPLOY_USER@$DEPLOY_HOST "sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/ecomms"

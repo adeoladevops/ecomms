@@ -11,6 +11,7 @@ pipeline {
             steps {
                 echo 'Cloning the repository...'
                 git branch: 'master', url: 'https://github.com/adeoladevops/ecomms.git'
+                sh 'ls -l'
             }
         }
         stage('Build') {
@@ -41,12 +42,14 @@ pipeline {
                 echo 'Packaging files for deployment...'
                 sh '''
                     mkdir -p package
+                    cp package.json package/
                     if [ -d build ]; then
                         cp -R build/ package/
                     else
                         echo "No build directory; copying app files"
                         cp -R *.js *.json public/ views/ package/
                     fi
+                    ls -l package/
                 '''
             }
         }
@@ -57,6 +60,7 @@ pipeline {
                     sh '''
                         ssh $DEPLOY_USER@$DEPLOY_HOST "sudo mkdir -p ${REPO_DIR}"
                         rsync -avz package/ $DEPLOY_USER@$DEPLOY_HOST:${REPO_DIR}
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "ls -l ${REPO_DIR}"
                     '''
                 }
             }

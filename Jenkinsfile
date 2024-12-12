@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Cloning the repository...'
                 git branch: 'master', url: 'https://github.com/adeoladevops/ecomms.git'
-                sh 'ls -l' 
+                sh 'ls -l'
             }
         }
         stage('Build') {
@@ -42,12 +42,15 @@ pipeline {
                 echo 'Packaging files for deployment...'
                 sh '''
                     mkdir -p package
+                    cp package.json package/
+                    cp server.js package/
                     if [ -d build ]; then
-                        cp -R build/ package/
+                        cp -R build/ package/public/
                     else
                         echo "No build directory; copying app files"
                         cp -R *.js *.json public/ views/ package/
                     fi
+                    ls -l package/
                 '''
             }
         }
@@ -58,6 +61,12 @@ pipeline {
                     sh '''
                         ssh $DEPLOY_USER@$DEPLOY_HOST "sudo mkdir -p ${REPO_DIR}"
                         rsync -avz package/ $DEPLOY_USER@$DEPLOY_HOST:${REPO_DIR}
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "ls -l ${REPO_DIR}"
+                        ssh $DEPLOY_USER@$DEPLOY_HOST "
+                        cd ${REPO_DIR} && 
+                        npm install && 
+                        echo 'Dependencies installed successfully'
+                        "
                     '''
                 }
             }
@@ -82,17 +91,25 @@ server {
     }
 }
 EOF
-                        "
+                            "
 
-                        # Enable the nginx configuration
-                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/ecomms"
+                            # Enable the nginx configuration
+                            ssh $DEPLOY_USER@$DEPLOY_HOST "sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/ecomms"
 
-                        # Test nginx configuration
-                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo nginx -t"
+                            # Test nginx configuration and Reload nginx to apply changes
+                            ssh $DEPLOY_USER@$DEPLOY_HOST "sudo nginx -t && sudo systemctl reload nginx"
 
-                        # Reload nginx to apply changes
-                        ssh $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl reload nginx"
-                    '''
+                            # Check if the application is running and start it if not
+                            ssh $DEPLOY_USER@$DEPLOY_HOST "
+                            if sudo lsof -i:3000; then
+                                echo 'Application is already running on port 3000.';
+                            else
+                                echo 'Starting application...';
+                                cd /var/www/ecomms/ && nohup npm start &> /dev/null & echo 'Application started successfully.';
+                            fi
+                            echo 'Job completed successfully.';
+                            "
+                        '''
                 }
             }
         }
